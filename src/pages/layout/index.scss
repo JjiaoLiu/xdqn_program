@@ -1,0 +1,26 @@
+.fixed-nav {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 144px;
+  background: #FFFFFF;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.32);
+  justify-content: space-around;
+  font-size: 30px;
+  color: #AFAFAF;
+
+  .item {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+
+    .icon {
+      width: 49px;
+      height: 46px;
+      margin-bottom: 10px;
+    }
+  }
+}

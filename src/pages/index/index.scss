@@ -1,0 +1,147 @@
+.index {
+  width: 100%;
+  background-color: #F4F4F4;
+  margin-top: 168px;
+
+  .banner {
+    height: 400px;
+  }
+
+  .nav {
+    padding: 24px 45px;
+    background-color: #FFF;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    grid-template-rows: auto auto;
+    grid-gap: 24px;
+    justify-content: space-between;
+    margin-bottom: 30px;
+
+    .item {
+      text-align: center;
+    }
+
+    .icon {
+      width: 120px;
+      height: 120px;
+    }
+
+    .label {
+      font-size: 34px;
+      color: #282828;
+      line-height: 48px;
+      padding-top: 10px;
+    }
+  }
+
+  .help {
+    padding: 22px 30px;
+    background-color: #FFF;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto;
+    justify-content: space-between;
+    margin-bottom: 30px;
+
+    .item {
+      border-radius: 14px;
+      width: 483px;
+      height: 138px;
+    }
+  }
+
+  .recommend {
+    .title {
+      padding: 30px;
+      background: #FFFFFF;
+      box-shadow: 0 2px 6px 0 #E1E0E0;
+      font-size: 44px;
+      line-height: 62px;
+      color: #474747;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+
+      .more-btn {
+        font-size: 34px;
+        display: inline-flex;
+        align-items: center;
+        color: #B3B3B3;
+      }
+    }
+
+    .item {
+      margin-bottom: 13px;
+      padding: 45px 50px;
+      background-color: #FFFFFF;
+      display: flex;
+      align-items: center;
+
+      .left {
+        display: inline-flex;
+
+        .typeImgUrl {
+          width: 103px;
+          height: 93px;
+          margin-right: 37px;
+        }
+
+        .top {
+          font-size: 44px;
+          color: #373737;
+          white-space: nowrap;
+          width: 650px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-bottom: 23px;
+        }
+
+        .bottom {
+          font-size: 34px;
+          color: #9599A2;
+          display: inline-flex;
+          align-items: center;
+        }
+      }
+
+      .right {
+        font-size: 48px;
+        color: #82A2FE;
+      }
+
+    }
+  }
+
+  .fixed-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    padding: 35px;
+    background-color: #FFFFFF;
+    z-index: 999;
+
+    .location {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .search-wrap {
+      flex: 1;
+
+      .search {
+        background-color: #F4F4F4;
+        border-radius: 49px;
+        padding: 22px 47px;
+        font-size: 39px;
+        line-height: 54px;
+        color: #4A4A4A;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}
