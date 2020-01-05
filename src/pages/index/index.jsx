@@ -3,6 +3,7 @@ import {View, Swiper, SwiperItem, Text, Image} from '@tarojs/components'
 import request from "./../../util/request";
 import './index.scss'
 import ImageRoot from "../boots/imageRoot";
+import JobCard from "../boots/jobcard";
 import icon_arrow_right_small from './icon_arrow_right_small.png';
 import icon_location from './icon_location.png';
 import icon_search from './icon_search.png';
@@ -21,11 +22,11 @@ const helpData = [{
 }];
 
 export default function Index() {
-  const [swiper, setSwiper] = useState([]);
-  const [jobType, setJobType] = useState([]);
-  const [recommend, setRecommend] = useState([]);
-  const [recommendpage, setRecommendpage] = useState(1);
-  const [help] = useState(helpData);
+  const [swiper, setSwiper] = useState([]);  //banner数据
+  const [jobType, setJobType] = useState([]); //职位类型数据
+  const [recommend, setRecommend] = useState([]); // 职位列表数据
+  const [recommendpage, setRecommendpage] = useState(1); //职位列表分页参数
+  const [help] = useState(helpData); //求职指南数据
 
   useDidShow(() => {
     request({
@@ -50,9 +51,7 @@ export default function Index() {
     });
     request({
       url: '/home/job/recommend',
-      data: {
-        pageNo: recommendpage
-      },
+      data: {pageNo: recommendpage},
       auth: false
     }).then((res) => {
       setRecommend(res.records);
@@ -62,6 +61,10 @@ export default function Index() {
 
   const toWebView = (url) => {
     return () => Taro.navigateTo({url: `/pages/webViewPage/index?url=${url}`})
+  };
+
+  const toJoblist = (type) => {
+    return Taro.navigateTo({url: `/pages/joblist/index?type=${type}`})
   };
 
   return (
@@ -91,7 +94,7 @@ export default function Index() {
       >
         {
           swiper.map((f, index) => {
-            return <SwiperItem key={index} onClick={toWebView(f.targetUrl)}>
+            return <SwiperItem key={index + '_swiper'} onClick={toWebView(f.targetUrl)}>
               <ImageRoot imageUrl={f.imageUrl} />
             </SwiperItem>
           })
@@ -100,7 +103,7 @@ export default function Index() {
       <View className='nav'>
         {
           jobType.map((f, index) => {
-            return <View className='item' key={index}>
+            return <View className='item' key={index + '_jobType'}>
               <View className='icon'>
                 <ImageRoot imageUrl={f.imgUrl} />
               </View>
@@ -112,14 +115,16 @@ export default function Index() {
       <View className='help'>
         {
           help.map((f, index) => {
-            return <Image onClick={toWebView(f.linkUrl)} mode='widthFix' src={f.imgUrl} className='item' key={index} />
+            return <Image onClick={toWebView(f.linkUrl)} mode='widthFix' src={f.imgUrl} className='item'
+              key={index + '_help'}
+            />
           })
         }
       </View>
       <View className='recommend'>
         <View className='title'>
           <Text>职位列表</Text>
-          <View className='more-btn'>
+          <View className='more-btn' onClick={toJoblist}>
             <Text>更多</Text>
             <View className='space-9' />
             <Image src={icon_arrow_right_small} className='icon_arrow_right_small' />
@@ -127,32 +132,7 @@ export default function Index() {
         </View>
         {
           recommend.map((f, index) => {
-            return <View className='item' key={index}>
-              <View className='left'>
-                <View className='typeImgUrl'>
-                  <ImageRoot imageUrl={f.typeImgUrl} />
-                </View>
-                <View>
-                  <View className='top'>
-                    <Text>{f.title}</Text>
-                  </View>
-                  <View className='bottom'>
-                    <Text>{f.city}</Text>
-                    <View className='space-15' />
-                    <Text className='light-color'>|</Text>
-                    <View className='space-15' />
-                    <Text>{f.area}</Text>
-                    <View className='space-40' />
-                    <Text>招用</Text>
-                    <View className='space-15' />
-                    <Text className='primary-color'>{f.recruitNum}</Text>
-                  </View>
-                </View>
-              </View>
-              <View className='right'>
-                <Text>{f.salary}币/时</Text>
-              </View>
-            </View>
+            return <JobCard data={f} key={index + '_recommend'} />
           })
         }
       </View>

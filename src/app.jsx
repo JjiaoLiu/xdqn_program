@@ -13,16 +13,15 @@ import './app.scss'
 //   require('nerv-devtools')
 // }
 
-const store = configStore()
+const store = configStore();
 
 class App extends Component {
 
   config = {
     pages: [
       'pages/layout/index',
-      'pages/login/index',
-      'pages/auth/index',
-      'pages/webViewPage/index',
+      'pages/joblist/index',
+      'pages/webViewPage/index'
     ],
     window: {
       backgroundTextStyle: 'light',

@@ -3,6 +3,11 @@
   height: 26px;
 }
 
+.icon_down_select_checked {
+  width: 20px;
+  height: 12px;
+}
+
 .icon_location {
   width: 37px;
   height: 45px;
@@ -36,3 +41,34 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+.btn {
+  border-radius: 62px;
+  width: 224px;
+  font-size: 36px;
+  color: #474747;
+  text-align: center;
+  background: #FFFFFF;
+  height: 92px;
+  display: inline-block;
+  border: 1Px solid #EBEBEB;
+  transition: all .3s;
+  outline: none;
+  &-primary {
+    color: #FFFFFF;
+    background: #82A2FE;
+    border: 1Px solid #82A2FE;
+  }
+  &-large {
+    height: 120px;
+    font-size: 44px;
+  }
+  &-rect {
+    border-radius: 8px;
+  }
+  &-fluid {
+    width: 100%;
+  }
+}
+
+

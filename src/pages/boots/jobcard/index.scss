@@ -1,0 +1,40 @@
+.job-card {
+  margin-bottom: 13px;
+  padding: 45px 50px;
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+
+  .left {
+    display: inline-flex;
+
+    .typeImgUrl {
+      width: 103px;
+      height: 93px;
+      margin-right: 37px;
+    }
+
+    .top {
+      font-size: 44px;
+      color: #373737;
+      white-space: nowrap;
+      width: 650px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 23px;
+    }
+
+    .bottom {
+      font-size: 34px;
+      color: #9599A2;
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+
+  .right {
+    font-size: 48px;
+    color: #82A2FE;
+  }
+
+}

@@ -26,12 +26,12 @@ const navData = [{
 export default function Layout() {
   const [current, setCurrent] = useState(0);
   const [nav] = useState(navData);
-  const [systeminfo, serSysteminfo] = useState(0);
+  const [systeminfo, setSysteminfo] = useState(0);
 
   useDidShow(() => {
     Taro.createSelectorQuery()
       .select('#fixed-nav')
-      .boundingClientRect().exec((res) => serSysteminfo(res[0].top));
+      .boundingClientRect().exec((res) => setSysteminfo(res[0].top));
   });
 
   return (
@@ -47,7 +47,7 @@ export default function Layout() {
       <View className='fixed-nav' id='fixed-nav'>
         {
           nav.map((f, index) => {
-            return <View key={index} className='item' onClick={() => setCurrent(index)}>
+            return <View key={index+'_nav'} className='item' onClick={() => setCurrent(index)}>
               <Image src={index === current ? f.imgUrlSelect : f.imgUrl} className='icon' />
               <Text className={index === current ? 'primary-color' : ''}>{f.title}</Text>
             </View>

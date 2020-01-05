@@ -6,7 +6,7 @@ const config = {
     '640': 2.34 / 2,
     '750': 1,
     '828': 1.81 / 2,
-    '1080': 1 / 0.7
+    '1080': 1 / 0.694
   },
   sourceRoot: 'src',
   outputRoot: 'dist',
