@@ -6,8 +6,9 @@
   top: 0;
   right: 0;
   bottom: 0;
-  overflow-y:scroll
+  overflow-y: scroll
 }
+
 .mask {
   position: absolute;
   left: 0;
@@ -17,6 +18,7 @@
   background: rgba(0, 0, 0, .5);
   overflow: hidden;
 }
+
 .job-empty {
   display: flex;
   flex-direction: column;
@@ -29,6 +31,7 @@
     line-height: 122px;
   }
 }
+
 .fixed-filter {
   position: fixed;
   left: 0;
@@ -37,18 +40,34 @@
   z-index: 999;
   .tab-header {
     display: flex;
-    padding: 35px 0;
     align-items: center;
-    justify-content: space-around;
+    padding: 36px 33px 36px 99px;
+    justify-content: space-between;
     background: #FFFFFF;
     border-top: 1Px solid #E1E0E0;
     box-shadow: 0 2px 6px 0 #E1E0E0;
     .item {
-      font-size: 37px;
+      font-size: 36px;
       line-height: 52px;
       display: inline-flex;
       align-items: center;
       color: #9C9C9C;
+      .line {
+        width: 1Px;
+        height: 60px;
+        background: #D8D8D8;
+        margin: 0 78px 0 70px;
+      }
+    }
+    .filter-btn {
+      width: 150px;
+      height: 76px;
+      font-size: 38px;
+      color: #616161;
+      line-height: 76px;
+      background: #f8f8f8;
+      text-align: center;
+      margin-left: 135px;
     }
   }
   .tab-submit-btn {
@@ -61,9 +80,11 @@
     right: 0;
     top: 122px;
     transform: translate(0, 2000px);
-    transition: transform .3s;
+    opacity: .3;
+    transition: transform .3s, opacity .3s;
     &.selected {
       transform: translate(0, 0%);
+      opacity: 1;
     }
   }
   .type-jobtype {
@@ -116,4 +137,43 @@
       }
     }
   }
+}
+
+.translate-page {
+  position: fixed;
+  transform: translateX(100%);
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #FFFFFF;
+  z-index: 10000;
+  transition: transform .3s;
+  &.selected {
+    transform: translateX(0);
+  }
+  .title {
+    height: 168px;
+    background: red;
+    text-align: center;
+    font-size: 48px;
+    color: #282828;
+    line-height: 168px;
+  }
+  .filter-page {
+    background: #82A2FE;
+  }
+  .tab-submit-btn {
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 50px;
+    background: #FFFFFF;
+    .btn.reset {
+      width: 310px;
+    }
+    .btn-submit {
+      width: 628px;
+    }
+  }
+
 }
