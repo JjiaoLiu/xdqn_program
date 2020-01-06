@@ -1,12 +1,15 @@
-import Taro, {useState, useDidShow} from "@tarojs/taro";
+import Taro, {useState, useDidShow,usePullDownRefresh,useReachBottom } from "@tarojs/taro";
 import {View, Image, Text, Button, ScrollView} from "@tarojs/components";
 import ImageRoot from "../boots/imageRoot";
 import JobCard from "../boots/jobcard";
 // import {AtButton} from 'taro-ui'
 import icon_down_select_checked from './icon_down_select_checked.png'
 import icon_down_select_default from './icon_down_select_default.png'
+import icon_view_state_empty from './icon_view_state_empty.png'
 import request from './../../util/request'
-import './index.scss'
+import {province as provinceJson} from './../../util/province'
+import './../../app.scss';
+import './index.scss';
 
 const tabheaderData = [
   {title: '类型', id: 1},
@@ -19,14 +22,34 @@ const jobsortData = [
   {id: 'salary', title: '时薪最高'},
   {id: 'recruitNum', title: '招人最多'}
 ];
+const provinceData = provinceJson.find((f)=>{
+	return f.name === '河南省';
+}).city[0]['area'];
+
+
 export default function Joblist() {
+  const [winheight,setWinheight] = useState(500);
+
+  const [mask,setMask] = useState(false);
+
   const [tabhead] = useState(tabheaderData); //筛选分类数据
-  const [tabcurrent, setTabcurrent] = useState({}); //当前选中帅选分类
-  const [jobtype, setJobtype] = useState([]); //职位类型数据
-  const [tabbodyheight, setTabbodyheight] = useState(0); //职位类型View高度
-  const [jobsort] = useState(jobsortData); //职位列表参数数据
-  const [jobsortcurrent] = useState(jobsortData[0]); //职位列表参数数据-选中的职位类型
-  const [joblist, setJoblist] = useState([]); //职位列表参数数据-选中的职位类型
+  const [tabselected, setTabselected] = useState({}); //当前选中分类
+
+	const [tabbodyheight, setTabbodyheight] = useState(0); //类型View高度
+	
+  const [jobtype, setJobtype] = useState([]); //类型数据
+	
+  const [province] = useState(provinceData); //区域数据
+	
+  const [jobsortArr] = useState(jobsortData); //排序数据
+	
+  const [job, setJob] = useState(null); //职位列表数据
+	
+	const [params,setParams] = useState({
+		jobTypeId:this.$router.params.jobTypeId,
+		pageNo:1
+	})
+
   useDidShow(() => {
     request({
       url: '/code/job_types',
@@ -34,44 +57,86 @@ export default function Joblist() {
     }).then((res) => {
       setJobtype(res);
     });
-    request({
-      url: '/search/job',
-      auth: false
-    }).then((res) => {
-      setJoblist(res);
-    });
+		getJob();
     const res = Taro.getSystemInfoSync();
+    setWinheight(res.windowHeight);
     Taro.createSelectorQuery()
       .selectAll('#tab-header,#tab-submit-btn')
       .boundingClientRect().exec((v) => {
       setTabbodyheight(res.windowHeight - v[0][0].height - v[0][1].height);
     });
   });
+	
+	const getJob=((defined)=>{
+		request({
+      url: '/search/job',
+      auth: false,
+			data:Object.assign({},params,defined)
+    }).then((res) => {
+      if(res.pageNo === 1){
+        setJob(res.records);
+      }else{
+        setJob(job.concat(res.records));
+      }
+      setParams({pageNo:++res.pageNo});
+      Taro.stopPullDownRefresh();
+    });
+	});
+
+	const hanleTab=((v)=>{
+    if(mask && v === tabselected){
+      setMask(false);
+    }else if(mask && v !== tabselected){
+      setTabselected(v);
+    }else{
+      setTabselected(v);
+      setMask(true);
+    }
+  });
+  
+	const hanleParams=((v)=>{
+		let _params =Object.assign({},params,v);
+		setParams(_params);
+	});
+	
+  const hanleSubmit=((v)=>{
+    getJob();
+    setMask(false);
+  });
+
+  usePullDownRefresh(() => {
+    console.log('usePullDownRefresh');
+     getJob({pageNo:1});
+  });
+
+  useReachBottom(() => {
+    getJob();
+  });
 
   return (
-    <View className='joblist' id='joblist'>
-      {tabcurrent.id && <View className='mask' onClick={() => setTabcurrent({})} />}
+    <View className='joblist' id='joblist' style={{height:winheight+'px'}}>
+      {tabselected.id && mask && <View className='mask' onClick={setMask.bind(this,false)} />}
       <View className='fixed-filter' id='fixed-filter'>
         <View className='tab-header' id='tab-header'>
           {
             tabhead.map((f) => {
-              return <View className='item' key={f.id + '_tabhead'} onClick={() => setTabcurrent(f)}>
-                <Text className={tabcurrent.id === f.id ? 'primary-color' : ''}>{f.title}</Text>
+              return <View className='item' key={f.id + '_tabhead'} onClick={hanleTab.bind(this,f)}>
+                <Text className={tabselected.id === f.id ? 'primary-color' : ''}>{f.title}</Text>
                 <View className='space-15' />
                 <View className='space-15' />
-                <Image src={tabcurrent.id === f.id ? icon_down_select_checked : icon_down_select_default}
+                <Image src={tabselected.id === f.id ? icon_down_select_checked : icon_down_select_default}
                   className='icon_down_select_checked'
                 />
               </View>
             })
           }
         </View>
-        {
-          <View className={['tranlate-wrap type-jobtype', tabcurrent.id === 1 ? 'selected' : '']}>
+				{/* 类型 */}
+          <View className={['tranlate-wrap type-jobtype',mask && tabselected.id === 1 ? 'selected' : '']}>
             <ScrollView scrollY id='tab-body' style={{height: tabbodyheight + 'px'}}>
               <View className='tab-body'>
                 <View className='all'>
-                  <Button className='btn btn-primary'>全部</Button>
+                  <Button className={['btn ',!params.jobTypeId ? 'btn-primary' : '']} onClick={hanleParams.bind(this,{jobTypeId:''})}>全部</Button>
                 </View>
                 {
                   jobtype.map((f) => {
@@ -85,7 +150,9 @@ export default function Joblist() {
                       <View className='next-item'>
                         {
                           f.jobTypes.map((v, i) => {
-                            return <Button className='btn' key={i + '_jobTypes'}>
+                            return <Button className={['btn ',params.jobTypeId === v.id ? 'btn-primary' :'']} key={i + '_jobTypes'} 
+                              onClick={hanleParams.bind(this,{jobTypeId:v.id})}
+                            >
                               {v.jobTypeName}
                             </Button>
                           })
@@ -97,48 +164,55 @@ export default function Joblist() {
               </View>
             </ScrollView>
             <View className='tab-submit-btn' id='tab-submit-btn'>
-              <Button className='btn btn-primary btn-rect btn-large btn-fluid'>确定</Button>
+               <Button className='btn btn-primary btn-rect btn-large btn-fluid' onClick={hanleSubmit.bind(this)}>确定</Button>
             </View>
           </View>
-        }
-        {
-          <View className={['tranlate-wrap type-area', tabcurrent.id === 2 ? 'selected' : '']}>
+					{/* 类型 */}
+					{/* 区域 */}
+          <View className={['tranlate-wrap type-area', mask && tabselected.id === 2 ? 'selected' : '']}>
             <View className='item'>
-              <Button className='btn btn-rect'>地区</Button>
-              <Button className='btn btn-rect'>地区</Button>
-              <Button className='btn btn-rect'>地区</Button>
-              <Button className='btn btn-rect'>地区</Button>
-              <Button className='btn btn-rect'>地区</Button>
-              <Button className='btn btn-rect'>地区</Button>
-              <Button className='btn btn-rect'>地区</Button>
-              <Button className='btn btn-rect'>地区</Button>
-              <Button className='btn btn-rect'>地区</Button>
-              <Button className='btn btn-rect'>地区</Button>
+						<Button onClick={hanleParams.bind(this,{area:''})} className={['btn btn-rect ',!params.area ? 'btn-primary' : '']} key='province'>全郑州市</Button>
+            {
+      				province.map((f,index)=>{
+      					return <Button onClick={hanleParams.bind(this,{area:f})} className={['btn btn-rect ',params.area === f ? 'btn-primary' :'']} key={index+'_province'}>{f}</Button>
+      				})
+      			}
             </View>
             <View className='tab-submit-btn'>
-              <Button className='btn btn-primary btn-rect btn-large btn-fluid'>确定</Button>
+              <Button className='btn btn-primary btn-rect btn-large btn-fluid' onClick={hanleSubmit.bind(this)}>确定</Button>
             </View>
           </View>
-        }
-        {
-          <View className={['tranlate-wrap type-jobsort', tabcurrent.id === 3 ? 'selected' : '']}>
+					{/* 区域 */}
+					{/* 排序 */}
+          <View className={['tranlate-wrap type-jobsort', mask && tabselected.id === 3 ? 'selected' : '']}>
             {
-              jobsort.map((f, index) => {
-                return <View key={index + '_jobsort'}
-                  className={['item ', jobsortcurrent.id === f.id ? 'primary-color' : '']}
+              jobsortArr.map((f, index) => {
+                return <View key={index + '_jobsort'} onClick={hanleParams.bind(this,{jobSort:f.id})}
+                  className={['item ', params.jobSort ? (params.jobSort === f.id ? 'primary-color' : '') : !f.id ? 'primary-color' : '']}
                 >{f.title}</View>
               })
             }
+            <View className='tab-submit-btn'>
+              <Button className='btn btn-primary btn-rect btn-large btn-fluid' onClick={hanleSubmit.bind(this)}>确定</Button>
+            </View>
           </View>
-        }
-
+					{/* 排序 */}
       </View>
+			{/* 职位列表数据 */}
       {
-        joblist.records.map((f, index) => {
-          return <JobCard key={index + '_joblist'} data={f} />
+       job && job.length && job.map((f, index) => {
+          return <JobCard key={index + '_job'} data={f} />
         })
       }
-
+      {/* 职位列表数据 */}
+      {/* 职位列表无数据 */}
+      {
+        job && !job.length && <View　className='job-empty'>
+            <Image src={icon_view_state_empty} className='icon_view_state_empty' />
+            <Text className='txt'>没有找到相关内容哦</Text>
+        </View>
+      }
+			{/* 职位列表无数据 */}
     </View>
   )
 }

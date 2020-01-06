@@ -7,7 +7,10 @@
   width: 20px;
   height: 12px;
 }
-
+.icon_view_state_empty{
+  width:779px;
+  height:625px;
+}
 .icon_location {
   width: 37px;
   height: 45px;
@@ -43,6 +46,8 @@
 }
 
 .btn {
+	outline: none;
+	border:none;
   border-radius: 62px;
   width: 224px;
   font-size: 36px;
@@ -53,7 +58,8 @@
   display: inline-block;
   border: 1Px solid #EBEBEB;
   transition: all .3s;
-  outline: none;
+	overflow:hidden;
+  
   &-primary {
     color: #FFFFFF;
     background: #82A2FE;

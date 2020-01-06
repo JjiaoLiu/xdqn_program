@@ -25,7 +25,7 @@ export default function Index() {
   const [swiper, setSwiper] = useState([]);  //banner数据
   const [jobType, setJobType] = useState([]); //职位类型数据
   const [recommend, setRecommend] = useState([]); // 职位列表数据
-  const [recommendpage, setRecommendpage] = useState(1); //职位列表分页参数
+  const [pageno, setPageno] = useState(1); //职位列表分页参数
   const [help] = useState(helpData); //求职指南数据
 
   useDidShow(() => {
@@ -51,20 +51,20 @@ export default function Index() {
     });
     request({
       url: '/home/job/recommend',
-      data: {pageNo: recommendpage},
+      data: {'pageNo': pageno},
       auth: false
     }).then((res) => {
       setRecommend(res.records);
-      setRecommendpage(res.pageNo++);
+      setPageno(++res.pageNo);
     });
   });
 
   const toWebView = (url) => {
-    return () => Taro.navigateTo({url: `/pages/webViewPage/index?url=${url}`})
+    return Taro.navigateTo({url: `/pages/webViewPage/index?url=${url}`})
   };
 
-  const toJoblist = (type) => {
-    return Taro.navigateTo({url: `/pages/joblist/index?type=${type}`})
+  const toJoblist = (jobTypeId) => {
+    return Taro.navigateTo({url: `/pages/joblist/index?jobTypeId=${jobTypeId}`})
   };
 
   return (
@@ -94,7 +94,7 @@ export default function Index() {
       >
         {
           swiper.map((f, index) => {
-            return <SwiperItem key={index + '_swiper'} onClick={toWebView(f.targetUrl)}>
+            return <SwiperItem key={index + '_swiper'} onClick={toWebView.bind(this,f.targetUrl)}>
               <ImageRoot imageUrl={f.imageUrl} />
             </SwiperItem>
           })
@@ -115,7 +115,7 @@ export default function Index() {
       <View className='help'>
         {
           help.map((f, index) => {
-            return <Image onClick={toWebView(f.linkUrl)} mode='widthFix' src={f.imgUrl} className='item'
+            return <Image onClick={toWebView.bind(this,f.linkUrl)} mode='widthFix' src={f.imgUrl} className='item'
               key={index + '_help'}
             />
           })
@@ -124,7 +124,7 @@ export default function Index() {
       <View className='recommend'>
         <View className='title'>
           <Text>职位列表</Text>
-          <View className='more-btn' onClick={toJoblist}>
+          <View className='more-btn' onClick={toJoblist.bind(this,'')}>
             <Text>更多</Text>
             <View className='space-9' />
             <Image src={icon_arrow_right_small} className='icon_arrow_right_small' />

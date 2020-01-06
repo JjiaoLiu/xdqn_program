@@ -75,7 +75,7 @@
 					"id": 3,
 					"name": "joblist",
 					"pathName": "pages/joblist/index",
-					"query": "",
+					"query": "jobTypeId=",
 					"scene": null
 				}
 			]

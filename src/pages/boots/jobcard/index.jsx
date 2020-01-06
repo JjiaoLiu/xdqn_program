@@ -1,6 +1,7 @@
 import Taro, {Text, View} from "@tarojs/components";
 import ImageRoot from "../imageRoot";
 import './index.scss'
+import './../../../app.scss'
 
 export default function JobCard(props) {
   const data = props.data || {};

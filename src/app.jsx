@@ -24,10 +24,12 @@ class App extends Component {
       'pages/webViewPage/index'
     ],
     window: {
-      backgroundTextStyle: 'light',
+      backgroundTextStyle: 'dark',
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: '小豆青年',
-      navigationBarTextStyle: 'black'
+      navigationBarTextStyle: 'black',
+      enablePullDownRefresh: true,
+      backgroundColor:'#f4f4f4'
     }
   }
 
