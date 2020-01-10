@@ -5,30 +5,37 @@
   display: flex;
   align-items: center;
   .media {
-    display: inline-flex;
+    display: flex;
     .typeImgUrl {
-      width: 103px;
-      height: 93px;
-      margin-right: 37px;
+      width: 150px;
+      height: 150px;
+      margin-right: 50px;
+      overflow: hidden;
     }
   }
   .title {
     font-size: 44px;
-    color: #373737;
+    line-height: 62px;
+    color: #434343;
     white-space: nowrap;
     width: 650px;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-bottom: 23px;
+    padding-bottom: 26px;
   }
   .content {
     font-size: 34px;
     color: #9599A2;
     display: inline-flex;
     align-items: center;
+    padding-bottom: 25px;
   }
-  .salary{
-    font-size: 48px;
-    color: #82A2FE;
+  .tag{
+    background: #F2F6F7;
+    padding: 5px 16px;
+    font-size: 33px;
+    color: #9599A2;
+    display: inline-block;
+    margin-right: 26px;
   }
 }

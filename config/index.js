@@ -6,7 +6,7 @@ const config = {
     '640': 2.34 / 2,
     '750': 1,
     '828': 1.81 / 2,
-    '1080': 1 / 0.694
+    '1080': 1 / 0.6944
   },
   sourceRoot: 'src',
   outputRoot: 'dist',
@@ -46,7 +46,7 @@ const config = {
         url: {
           enable: true,
           config: {
-            limit: 10240 // 设定转换尺寸上限
+            limit: 1024000 // 设定转换尺寸上限
           }
         },
         cssModules: {

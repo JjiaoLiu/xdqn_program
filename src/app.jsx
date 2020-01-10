@@ -4,6 +4,7 @@ import Taro, {Component} from '@tarojs/taro'
 import {Provider} from '@tarojs/redux'
 import Index from './pages/index'
 import configStore from './store'
+import request from './util/request'
 
 import './app.scss'
 
@@ -21,7 +22,12 @@ class App extends Component {
     pages: [
       'pages/layout/index',
       'pages/joblist/index',
-      'pages/webViewPage/index'
+      'pages/webViewPage/index',
+      'pages/jobid/index',
+      'pages/employer/index',
+      'pages/auth/index',
+      'pages/search/index',
+      'pages/searchresult/index',
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -30,6 +36,12 @@ class App extends Component {
       navigationBarTextStyle: 'black',
       enablePullDownRefresh: true,
       backgroundColor:'#f4f4f4'
+    },
+    plugins: {
+      calendar: {
+        version: '1.1.3',
+        provider: 'wx92c68dae5a8bb046'
+      },
     }
   }
 
@@ -37,10 +49,47 @@ class App extends Component {
   }
 
   componentDidShow() {
+      // Taro.getSetting({
+      //   success: res=> {
+      //     if (res.authSetting && res.authSetting['scope.userInfo']) {
+      //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+      //       Taro.getUserInfo({
+      //         success: function (data) {
+      //           console.log(data.userInfo);
+      //           // {
+      //           //   avatarUrl: '微信头像img文件path'
+      //           //   nickname: '微信昵称'
+      //           // }
+      //         }
+      //       });
+      //     } else {
+            
+      //     }
+      //   }
+      // });
+
+
+      Taro.checkSession({
+        success (res) {
+          console.log(res);
+        },
+        fail (res) {
+          Taro.login().then(res=>{
+            request({
+              url:'/social/login',
+              data:{
+                code:res.code
+              }      
+            }).then(res=>{
+              console.log(res);
+            })
+          })
+        }
+      })
+
     // Taro.checkSession().then(() => {
-    //
-    // })
-    //   .catch(() => {
+    
+    // }).catch(() => {
     //     return Taro.login()
     //       .then(res => {
     //         console.log(res);

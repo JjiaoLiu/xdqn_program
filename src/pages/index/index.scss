@@ -1,7 +1,7 @@
 .index {
   width: 100%;
   background-color: #F4F4F4;
-  margin-top: 168px;
+  padding-top: 168px;
 
   .banner {
     height: 400px;
@@ -77,11 +77,14 @@
     top: 0;
     left: 0;
     right: 0;
-    display: flex;
-    align-items: center;
-    padding: 35px;
-    background-color: #FFFFFF;
     z-index: 999;
+
+    .search-box{
+      display: flex;
+      align-items: center;
+      padding: 35px;
+      background-color: #FFFFFF;
+    }
 
     .location {
       display: inline-flex;

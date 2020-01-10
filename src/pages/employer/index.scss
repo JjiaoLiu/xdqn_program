@@ -1,0 +1,111 @@
+.icon_arrow_right{
+	width: 20px;
+	height: 48px;
+}
+
+.icon_location{
+	width: 44px;
+	height: 54px;
+}
+
+.icon_back{
+	width: 31px;
+	height: 53px;
+}
+
+.employer{
+	background: #FAFBFD;
+	padding-top: 168px;
+	.map-wrap{
+		position: relative;
+
+		.map{
+			height: 188px;
+			width: 1000px;
+			background-color: #dddddd;
+			overflow: hidden;
+		}
+		.data{
+			background: #FFFFFF;
+			padding: 0 36px;
+			box-shadow: 0 2px 8px 0 #82A2FE;
+			border-radius: 45px;
+			width: 820px;
+			height: 90px;
+			position: absolute;
+			left: 54px;
+			top: 49px;
+			display: flex;
+			align-items: center;
+			font-size: 36px;
+			color: #6D6D6D;
+			.btn-next{
+				flex: 1;
+				text-align: right;
+				height: 48px;
+			}
+		}
+	}
+
+	.section{
+		padding: 45px;
+		background-color: #FFFFFF;
+		border-bottom: 1Px solid #F1F1F1;
+		.section-title{
+			font-size: 39px;
+			color: #434343;
+			text-align: left;	
+			padding-bottom: 30px;
+		}
+
+		.introduction{
+			font-size: 37px;
+			color: #828282;
+			text-align: justify;
+		}
+
+		.address{
+			font-size: 37px;
+			color: #353535;
+			padding-top: 45px;
+			padding-bottom: 15px;
+			line-height: 52px;
+		}
+
+		.empty{
+			font-size: 37px;
+			color: #828282;
+			text-align: justify;
+		}
+		.company{
+			display: flex;
+			align-items: stretch;
+			.avatar{
+				background: #D8D8D8;
+				margin-right: 30px;
+				width: 150px;
+				height: 150px;
+				overflow: hidden;
+			}
+			.txt{
+				display: flex;
+				flex-direction: column;
+				line-height: 62px;
+				justify-content: space-between;
+				font-size: 44px;
+				color: #474747;
+				flex: 1;
+			}
+			.tag{
+				background: #F2F6F7;
+				padding: 5px 16px;
+				font-size: 33px;
+				color: #9599A2;
+				display: inline-block;
+				margin-right: 26px;
+			}
+		}
+		
+	}
+}
+

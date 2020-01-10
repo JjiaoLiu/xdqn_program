@@ -3,7 +3,7 @@ import ImageRoot from "./../imageRoot";
 import './index.scss';
 import './../../../app.scss';
 
-export default function JobCard(props) {
+export default function EmployerCard(props) {
 
   const job = props.data || {};
 
@@ -11,10 +11,10 @@ export default function JobCard(props) {
     <View className='job-card' onClick={this.props.onClick}>
       <View className='media'>
         <View className='typeImgUrl'>
-          <ImageRoot imageUrl={job.typeImgUrl} />
+          <ImageRoot imageUrl={job.logo} />
         </View>
         <View>
-          <View className='title'><Text>{job.title}</Text></View>
+          <View className='title'><Text>{job.employerName}</Text></View>
           <View className='content'>
             <Text>{job.city}</Text>
             <View className='space-15' />
@@ -22,13 +22,20 @@ export default function JobCard(props) {
             <View className='space-15' />
             <Text>{job.area}</Text>
             <View className='space-40' />
-            <Text>招用</Text>
+            <Text>热招职位</Text>
             <View className='space-15' />
-            <Text className='primary-color'>{job.recruitNum}</Text>
+            <Text className='primary-color'>{job.jobNum}</Text>
+          </View>
+          <View>
+            <View className='tag'>
+              {job.rygmName}
+            </View>
+            <View className='tag'>
+              {job.hyflName}
+            </View>
           </View>
         </View>
       </View>
-      <View className='salary'><Text>{job.salary}币/时</Text></View>
     </View>
   )
 }

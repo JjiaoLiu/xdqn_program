@@ -8,6 +8,13 @@ const ajax = (options) => {
       'Authorization': 'Bearer ' + token
     };
   }
+  
+  for (const key in options.data) {              // 去除对象内多余的空值key
+    if (options.data[key] === '') {
+      delete options.data[key]
+    }
+  }
+
   return Taro.request({
     // eslint-disable-next-line no-undef
     url: REQUEST_URL + options.url,

@@ -26,7 +26,7 @@
 	"compileType": "miniprogram",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
-	"libVersion": "2.10.0",
+	"libVersion": "2.9.3",
 	"condition": {
 		"search": {
 			"current": -1,
@@ -76,6 +76,34 @@
 					"name": "joblist",
 					"pathName": "pages/joblist/index",
 					"query": "jobTypeId=",
+					"scene": null
+				},
+				{
+					"id": 4,
+					"name": "pages/jobid/index",
+					"pathName": "pages/jobid/index",
+					"query": "jobid=1",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "employer",
+					"pathName": "pages/employer/index",
+					"query": "employerId=1",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/search/index",
+					"pathName": "pages/search/index",
+					"query": "employerId=1",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/searchresult/index",
+					"pathName": "pages/searchresult/index",
+					"query": "searchKey=",
 					"scene": null
 				}
 			]

@@ -1,6 +1,7 @@
 import Taro, {useState, useDidShow} from '@tarojs/taro'
 import {ScrollView, View, Image, Text} from '@tarojs/components'
 import Index from "../index";
+import My from "../my/";
 import './index.scss'
 
 const navData = [{
@@ -9,20 +10,20 @@ const navData = [{
   imgUrl: require("./icon_home_default.png"),
   // eslint-disable-next-line import/no-commonjs
   imgUrlSelect: require("./icon_home_select.png")
-}, {
-  title: "工作台",
-  // eslint-disable-next-line import/no-commonjs
-  imgUrl: require("./icon_work_default.png"),
-  // eslint-disable-next-line import/no-commonjs
-  imgUrlSelect: require("./icon_work_select.png")
-}, {
+},{
   title: "我的",
   // eslint-disable-next-line import/no-commonjs
   imgUrl: require("./icon_my_default.png"),
   // eslint-disable-next-line import/no-commonjs
   imgUrlSelect: require("./icon_my_select.png")
 }];
-
+//  {
+//   title: "工作台",
+//   // eslint-disable-next-line import/no-commonjs
+//   imgUrl: require("./icon_work_default.png"),
+//   // eslint-disable-next-line import/no-commonjs
+//   imgUrlSelect: require("./icon_work_select.png")
+// }, 
 export default function Layout() {
   const [current, setCurrent] = useState(0);
   const [nav] = useState(navData);
@@ -42,6 +43,9 @@ export default function Layout() {
       >
         {
           current === 0 ? <Index /> : ''
+        }
+        {
+          current === 1 ? <My /> : ''
         }
       </ScrollView>
       <View className='fixed-nav' id='fixed-nav'>

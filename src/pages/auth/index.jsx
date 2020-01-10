@@ -1,7 +1,6 @@
 import Taro, {useState, useDidShow} from '@tarojs/taro';
-import {AtButton, AtAvatar} from "taro-ui";
-import {View, Text} from "@tarojs/components";
-
+import {View, Text, Button} from "@tarojs/components";
+import './index.scss';
 export default function Auth() {
   const [loading, setLoading] = useState(false);
   const tobegin = (res) => {
@@ -26,29 +25,21 @@ export default function Auth() {
     }
   };
 
+  useDidShow(()=>{
+     
+  })
+
   return (
-    <View className='Auth body'>
-      <View className='textAlign need'>
-        <AtAvatar circle image='https://jdc.jd.com/img/200'/>
-        <Text>你的微信头像、昵称、地区和性别信息</Text>
-      </View>
+    <View className='auth body'>
+      <View><Text>小豆青年</Text></View>
       <View className='auth-button'>
-        <AtButton
-          size='small'
+        <Button
           type='primary'
-          loading={loading}
           openType='getUserInfo'
           onGetUserInfo={tobegin}
         >
-          同意
-        </AtButton>
-        <AtButton
-          type='secondary'
-          size='small'
-          onClick={() => Taro.switchTab({url: '/pages/index/index'})}
-        >
-          拒绝
-        </AtButton>
+          登录
+        </Button>
       </View>
     </View>
   );

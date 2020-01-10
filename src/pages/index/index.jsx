@@ -54,7 +54,11 @@ export default function Index() {
       data: {'pageNo': pageno},
       auth: false
     }).then((res) => {
-      setRecommend(res.records);
+      if(res.pageno === 1) {
+        setRecommend(res.records);
+      } else {
+        setRecommend(Object.assign([], recommend, res.records));
+      }
       setPageno(++res.pageNo);
     });
   });
@@ -63,24 +67,34 @@ export default function Index() {
     return Taro.navigateTo({url: `/pages/webViewPage/index?url=${url}`})
   };
 
+  const toSearch = (url) => {
+    return Taro.navigateTo({url: `/pages/search/index`});
+  };
+
   const toJoblist = (jobTypeId) => {
     return Taro.navigateTo({url: `/pages/joblist/index?jobTypeId=${jobTypeId}`})
+  };
+
+  const toJobid = (jobid) => {
+    return Taro.navigateTo({url: `/pages/jobid/index?jobid=${jobid}`})
   };
 
   return (
     <View className='index'>
       <View className='fixed-top'>
-        <View className='location'>
-          <Image src={icon_location} className='icon_location' />
-          <View className='space-15' />
-          <Text className='primary-color'>地址</Text>
-        </View>
-        <View className='space-40' />
-        <View className='search-wrap'>
-          <View className='search'>
-            <Image src={icon_search} className='icon_search' />
+        <View className='search-box' onClick={toSearch.bind(this)}>
+          <View className='location'>
+            <Image src={icon_location} className='icon_location' />
             <View className='space-15' />
-            <Text className='light-color'>你想要的都在这里</Text>
+            <Text className='primary-color'>地址</Text>
+          </View>
+          <View className='space-40' />
+          <View className='search-wrap'>
+            <View className='search'>
+              <Image src={icon_search} className='icon_search' />
+              <View className='space-15' />
+              <Text className='light-color'>你想要的都在这里</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -132,7 +146,7 @@ export default function Index() {
         </View>
         {
           recommend.map((f, index) => {
-            return <JobCard data={f} key={index + '_recommend'} />
+            return <JobCard data={f} onClick={toJobid.bind(this,f.id)} key={index + '_recommend'} />
           })
         }
       </View>
