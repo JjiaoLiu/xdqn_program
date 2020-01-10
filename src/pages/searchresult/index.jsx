@@ -1,5 +1,5 @@
 
-import Taro, {useState, useDidShow, usePullDownRefresh, useReachBottom,useEffect} from "@tarojs/taro";
+import Taro, {useState, useDidShow, usePullDownRefresh, useReachBottom,useEffect,useCallback} from "@tarojs/taro";
 import {View, Image, Text, Button, ScrollView,Input} from "@tarojs/components";
 import {AtMessage} from "taro-ui";
 import ImageRoot from "../boots/imageRoot";
@@ -49,7 +49,6 @@ export default function Searchresult() {
   const [mask, setMask] = useState(false);
 
   const [tabhead] = useState(tabheaderData); //筛选分类数据
-  const [tabselected, setTabselected] = useState({}); //当前选中分类
 
   const [fixedheight, setFixedheight] = useState(0); //setFixedheight
 
@@ -74,64 +73,69 @@ export default function Searchresult() {
   const [params, setParams] = useState({
     pageNo: 1,
     gender: 'all',
-    searchKey:searchkey,
   });
 
   const [employerParams, setEmployerParams] = useState({
     pageNo: 1,
-    searchKey:searchkey
   });
 
   useDidShow(() => {
     const res = Taro.getSystemInfoSync();
     setWinheight(res.windowHeight);
     Taro.createSelectorQuery()
-      .selectAll('#filter-page-title,#filter-page-tab-submit-btn')
+      .selectAll('#fixed-top,#filter-page-title,#filter-page-tab-submit-btn')
       .boundingClientRect().exec((v) => {
-      setFilterscrollpageheight(res.windowHeight - v[0][0].height - v[0][1].height);
+      setFilterscrollpageheight(res.windowHeight - v[0][1].height - v[0][2].height);
+      setFixedheight(v[0].height);
     });
+     let _selectedjobsort = jobsortArr.find(f => {
+       return f.id === (params.jobSort ? params.jobSort :'');
+     });
+    _selectedjobsort ? setSelectedjobsort(_selectedjobsort.title) : '';
   });
 
   useEffect(() => {
-    getJob({pageNo:1});
+    mask && setMask(false);
+    getJob()
+  },[params]);
+
+  useCallback(() => {
     Taro.createSelectorQuery()
       .select('#fixed-top')
       .boundingClientRect().exec((v) => {
         setFixedheight(v[0].height);
+        console.log(v)
     });
-  },[tabtype])
+    handleParams({pageNo:1});
+    mask && setMask(false);
+  },[tabtype]);
 
-  useEffect(() => {
-    console.log('params.jobSort',params.jobSort)
+  useCallback(() => {
     let _selectedjobsort = jobsortArr.find(f => {
       return f.id === (params.jobSort ? params.jobSort :'');
     });
     _selectedjobsort ? setSelectedjobsort(_selectedjobsort.title) : '';
+    handleParams({pageNo:1});
+    mask && setMask(false);
   },[params.jobSort]);
 
-  const getJob = (defined) => {
-    if(!searchkey){
-      return Taro.atMessage({
-        'message': '请输入关键字',
-        'type':'info'
-      })
-    }
-    let _params = tabtype === 'job' ?
-    Object.assign({}, params, filterparams,{searchKey:searchkey}, defined) : Object.assign({},employerParams,{searchKey:searchkey},defined);
+  const getJob = () => {
+    // if(!searchkey){
+    //   return Taro.atMessage({
+    //     'message': '请输入关键字',
+    //     'type':'info'
+    //   })
+    // }
     request({
       url: `/search/${tabtype}`,
       auth: false,
-      data: _params
+      data: tabtype === 'job' ? Object.assign({},params,{searchKey:searchkey}) : Object.assign({},employerParams,{searchKey:searchkey})
     }).then((res) => {
       if (res.pageNo === 1) {
         setJob(res.records);
       } else {
         setJob(job.concat(res.records));
       }
-      let _params = tabtype === 'job' ?
-        Object.assign({}, params,filterparams,defined,{searchKey:searchkey},{pageNo: ++res.pageNo}) : 
-        Object.assign({},employerParams,defined,{searchKey:searchkey},{pageNo: ++res.pageNo});
-      tabtype === 'job' ? setParams(_params) :setEmployerParams(_params);
       Taro.stopPullDownRefresh();
     });
   };
@@ -147,17 +151,10 @@ export default function Searchresult() {
   const handleTab = (v) => {
     v === 'jobSort' && mask && setMask(false);
     v === 'jobSort' && !mask && setMask(true);
-    v !== 'jobSort' && getJob({pageNo:1,jobSort:v});
-  };
-
-  const handleTabjobsort = (v) => {
-    mask && setMask(false);
-    getJob({pageNo:1,jobSort:v});
-    handleParams({jobSort:v});
+    v !== 'jobSort' && handleParams({'jobSort':v,pageNo:1});
   };
 
   const handleTabtype = (v) => {
-    mask && setMask(false);
     setTabtype(v);
   };
 
@@ -172,11 +169,9 @@ export default function Searchresult() {
   };
 
   const handleSubmit = (() => {
-    getJob({pageNo:1});
-    mask && setMask(false);
-    filterscrollpageshow && setParams(filterparams);
+    let _params = Object.assign({},params,filterparams,{pageNo:1});
+    setParams(_params);
     filterscrollpageshow && setFilterscrollpageshow(false);
-    
   });
 
   const handleParamsDefineDate = ()=>{
@@ -199,17 +194,16 @@ export default function Searchresult() {
     setFilterparams(_params);
   };
 
-  const handleTabFilter = (()=>{
+  const handleTabFilter = (()=>{ //显示删选页面
     setFilterscrollpageshow(true);
-    setTabselected(false);
   })
 
   usePullDownRefresh(() => {
-    getJob({pageNo: 1});
+    handleParams({pageNo:1})
   });
 
   useReachBottom(() => {
-    getJob();
+    handleParams({pageNo:++params.pageNo})
   });
 
   const toJobid = (jobid) => {
@@ -221,7 +215,7 @@ export default function Searchresult() {
   };
 
   return (
-<View className={['search-result',tabselected.id && mask ? 'with-mask' : '']} style={{'min-height':winheight+'px','padding-top':fixedheight+'px'}}>
+<View className={['search-result',mask ? 'with-mask' : '']} style={{'min-height':winheight+'px','padding-top':fixedheight+'px'}}>
     <AtMessage />
     {/*fixed定位元素*/}
     <View className='fixed-top' id='fixed-top'>
