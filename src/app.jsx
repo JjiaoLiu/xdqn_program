@@ -69,23 +69,23 @@ class App extends Component {
       // });
 
 
-      Taro.checkSession({
-        success (res) {
-          console.log(res);
-        },
-        fail (res) {
-          Taro.login().then(res=>{
-            request({
-              url:'/social/login',
-              data:{
-                code:res.code
-              }      
-            }).then(res=>{
-              console.log(res);
-            })
-          })
-        }
-      })
+      // Taro.checkSession({
+      //   success (res) {
+      //     console.log(res);
+      //   },
+      //   fail (res) {
+      //     Taro.login().then(res=>{
+      //       request({
+      //         url:'/social/login',
+      //         data:{
+      //           code:res.code
+      //         }      
+      //       }).then(res=>{
+      //         console.log(res);
+      //       })
+      //     })
+      //   }
+      // })
 
     // Taro.checkSession().then(() => {
     

@@ -40,6 +40,9 @@ export default function Joblist() {
 
   const [mask, setMask] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+  const [canload, setCanload] = useState(true);
+
   const [tabhead] = useState(tabheaderData); //筛选分类数据
   const [tabselected, setTabselected] = useState({}); //当前选中分类
 
@@ -95,13 +98,12 @@ export default function Joblist() {
       auth: false,
       data: Object.assign({}, params, filterparams, defined)
     }).then((res) => {
-      if (res.pageNo === 1) {
-        setJob(res.records);
-      } else {
-        setJob(job.concat(res.records));
-      }
-      let _params = Object.assign({},params,{pageNo: ++res.pageNo})
+      res.records.length < res.pageSize ? setCanload(false) : ''
+      res.pageNo === 1 ? setJob(res.records) : setJob(job.concat(res.records));
+      setLoading(false);
+      let _params = Object.assign({},params,filterparams,defined,{pageNo: ++res.pageNo})
       setParams(_params);
+      setLoading(false)
       Taro.stopPullDownRefresh();
     });
   };
@@ -128,11 +130,10 @@ export default function Joblist() {
   };
 
   const handleSubmit = (() => {
+    setCanload(true);
     getJob({pageNo:1});
     mask && setMask(false);
-    filterscrollpageshow && setParams(filterparams);
     filterscrollpageshow && setFilterscrollpageshow(false);
-    
   });
 
   const handleParamsDefineDate = ()=>{
@@ -160,11 +161,12 @@ export default function Joblist() {
   })
 
   usePullDownRefresh(() => {
+    setCanload(true);
     getJob({pageNo: 1});
   });
 
   useReachBottom(() => {
-    getJob();
+    canload && getJob();
   });
 
    const toJobid = (jobid) => {

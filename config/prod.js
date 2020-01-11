@@ -3,7 +3,8 @@ module.exports = {
     NODE_ENV: '"production"'
   },
   defineConstants: {
-    REQUEST_URL: 'http://192.168.0.105:8080'
+    REQUEST_URL: 'https://app.jxd007.cn',
+    IMAGE_URL: 'https://app.jxd007.cn/',
   },
   weapp: {},
   h5: {

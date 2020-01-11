@@ -1,5 +1,5 @@
 
-import Taro, {useState, useDidShow, usePullDownRefresh, useReachBottom,useEffect,useCallback} from "@tarojs/taro";
+import Taro, {useState, useDidShow, usePullDownRefresh, useReachBottom,useEffect,useLayoutEffect} from "@tarojs/taro";
 import {View, Image, Text, Button, ScrollView,Input} from "@tarojs/components";
 import {AtMessage} from "taro-ui";
 import ImageRoot from "../boots/imageRoot";
@@ -8,6 +8,7 @@ import EmployerCard from "../boots/employercard";
 import icon_sort_select_arrow from './icon_sort_select_arrow.png';
 import icon_right_down_arrow from './icon_right_down_arrow.png';
 import icon_close from './icon_close.png';
+import icon_back from './icon_back.png';
 import icon_view_state_empty from './icon_view_state_empty.png';
 import request from './../../util/request';
 import {province as provinceJson} from './../../util/province';
@@ -36,6 +37,7 @@ const genderData = [
 const provinceData = provinceJson.find((f) => {
   return f.name === '河南省';
 }).city[0]['area'];
+
 export default function Searchresult() {
 
   const [history,setHistory] = useState([]);
@@ -47,6 +49,9 @@ export default function Searchresult() {
   const [winheight,setWinheight] = useState(500);
 
   const [mask, setMask] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [canload, setCanload] = useState(true);
 
   const [tabhead] = useState(tabheaderData); //筛选分类数据
 
@@ -64,7 +69,7 @@ export default function Searchresult() {
 
   const [gender] = useState(genderData); //性别数据
 
-  const [job, setJob] = useState(null); //职位列表数据
+  const [job, setJob] = useState([]); //职位列表数据
 
   const [filterparams, setFilterparams] = useState({
     gender: 'all',
@@ -75,10 +80,6 @@ export default function Searchresult() {
     gender: 'all',
   });
 
-  const [employerParams, setEmployerParams] = useState({
-    pageNo: 1,
-  });
-
   useDidShow(() => {
     const res = Taro.getSystemInfoSync();
     setWinheight(res.windowHeight);
@@ -86,41 +87,36 @@ export default function Searchresult() {
       .selectAll('#fixed-top,#filter-page-title,#filter-page-tab-submit-btn')
       .boundingClientRect().exec((v) => {
       setFilterscrollpageheight(res.windowHeight - v[0][1].height - v[0][2].height);
-      setFixedheight(v[0].height);
+      setFixedheight(v[0][0].height);
     });
-     let _selectedjobsort = jobsortArr.find(f => {
+    let _selectedjobsort = jobsortArr.find(f => {
        return f.id === (params.jobSort ? params.jobSort :'');
-     });
-    _selectedjobsort ? setSelectedjobsort(_selectedjobsort.title) : '';
+    });
+    setSelectedjobsort(_selectedjobsort.title);
   });
 
   useEffect(() => {
-    mask && setMask(false);
+    if(mask){
+      let _selectedjobsort = jobsortArr.find(f => {
+        return f.id === (params.jobSort ? params.jobSort :'');
+      });
+      setSelectedjobsort(_selectedjobsort.title);
+      setMask(false);
+    }
     getJob()
   },[params]);
 
-  useCallback(() => {
+  useLayoutEffect(() => {
+    handleParams({pageNo:1});
     Taro.createSelectorQuery()
       .select('#fixed-top')
-      .boundingClientRect().exec((v) => {
-        setFixedheight(v[0].height);
-        console.log(v)
-    });
-    handleParams({pageNo:1});
+      .boundingClientRect().exec((v) => setFixedheight(v[0].height));
     mask && setMask(false);
   },[tabtype]);
 
-  useCallback(() => {
-    let _selectedjobsort = jobsortArr.find(f => {
-      return f.id === (params.jobSort ? params.jobSort :'');
-    });
-    _selectedjobsort ? setSelectedjobsort(_selectedjobsort.title) : '';
-    handleParams({pageNo:1});
-    mask && setMask(false);
-  },[params.jobSort]);
-
   const getJob = () => {
     // if(!searchkey){
+    //   setLoading(false);
     //   return Taro.atMessage({
     //     'message': '请输入关键字',
     //     'type':'info'
@@ -129,13 +125,11 @@ export default function Searchresult() {
     request({
       url: `/search/${tabtype}`,
       auth: false,
-      data: tabtype === 'job' ? Object.assign({},params,{searchKey:searchkey}) : Object.assign({},employerParams,{searchKey:searchkey})
+      data: tabtype === 'job' ? Object.assign({},params,{searchKey:searchkey}) : Object.assign({},{pageNo:params.pageNo},{searchKey:searchkey})
     }).then((res) => {
-      if (res.pageNo === 1) {
-        setJob(res.records);
-      } else {
-        setJob(job.concat(res.records));
-      }
+      res.records.length < res.pageSize ? setCanload(false); : ''
+      res.pageNo === 1 ? setJob(res.records) : setJob(job.concat(res.records));
+      setLoading(false);
       Taro.stopPullDownRefresh();
     });
   };
@@ -155,11 +149,15 @@ export default function Searchresult() {
   };
 
   const handleTabtype = (v) => {
+    setLoading(true);
+    setCanload(true);
     setTabtype(v);
   };
 
   const handleParams = (v) => {
-    let _params = Object.assign({}, params, v);
+    setLoading(true);
+    setCanload(true);
+    let _params = Object.assign({}, params, v,{pageNo:1});
     setParams(_params);
   };
 
@@ -199,11 +197,12 @@ export default function Searchresult() {
   })
 
   usePullDownRefresh(() => {
+    setCanload(true);
     handleParams({pageNo:1})
   });
 
   useReachBottom(() => {
-    handleParams({pageNo:++params.pageNo})
+    canload && handleParams({pageNo:++params.pageNo})
   });
 
   const toJobid = (jobid) => {
@@ -220,21 +219,17 @@ export default function Searchresult() {
     {/*fixed定位元素*/}
     <View className='fixed-top' id='fixed-top'>
       <View className='search-box'>
-        <View className='location'>
-          <Image src={icon_location} className='icon_location' />
-          <View className='space-15' />
-          <Text>地址</Text>
+        <View className='action'>
+          <View onClick={toPrev.bind(this)} className='action-btn'><Image src={icon_back} className='icon_back' /></View>
         </View>
-        <View className='space-40' />
         <View className='search-wrap'>
           <View className='search'>
-            <Image src={icon_search} onClick={getJob.bind(this,{pageNo:1})} className='icon_search' />
+            <Image src={icon_search} onClick={toPrev.bind(this)} className='icon_search' />
             <View className='space-15' />
             <Input placeholder='请输入职位或公司' value={searchkey} onChange={(e)=> handleChange(e)} placeholder='' focus/>
           </View>
         </View>
-        <View className='space-40' />
-        <View className='cancel' onClick={toPrev.bind(this)}><Text>取消</Text></View>
+        <View className='cancel' onClick={handleParams.bind(this,{pageNo:1})}><Text>搜索</Text></View>
       </View>
       <View className='tab-type'>
         <View className={['item ',tabtype === 'job' ? 'selected' : '']} onClick={handleTabtype.bind(this,'job')}>搜职位</View>
@@ -248,12 +243,12 @@ export default function Searchresult() {
                                   <View className='space-15' />
                                   <Image src={icon_sort_select_arrow} className='icon_sort_select_arrow' />
                                 </View>
-                                <View className={['item ',params.jobSort === 'time' ? 'primary-color' : '']} onClick={handleTab.bind(this,'time')}>
+                                <View className={['item ',params.jobSort === 'time' ? 'selected' : '']} onClick={handleTab.bind(this,'time')}>
                                   <Text>最新发布</Text>
                                   <View className='space-15' />
                                   <View className='space-15' />
                                 </View>
-                                <View className={['item ',params.jobSort === 'instance' ? 'primary-color' : '']} onClick={handleTab.bind(this,'instance')}>
+                                <View className={['item ',params.jobSort === 'instance' ? 'selected' : '']} onClick={handleTab.bind(this,'instance')}>
                                   <Text>离我最近</Text>
                                   <View className='space-15' />
                                   <View className='space-15' />
@@ -280,21 +275,21 @@ export default function Searchresult() {
     {mask && <View className='mask' onClick={setMask.bind(this, false)} />}
     {/* 职位列表数据 */}
     {
-      tabtype === 'job' && job && job.length && job.map((f, index) => {
+      !loading && tabtype === 'job' && job.length && job.map((f, index) => {
         return <JobCard onClick={toJobid.bind(this,f.id)} key={index + '_job'} data={f} />
       })
     }
     {/* 职位列表数据 */}
     {/* 公司列表数据 */}
     {
-      tabtype === 'employer' && job && job.length && job.map((f, index) => {
+      !loading && tabtype === 'employer' &&  job.length && job.map((f, index) => {
         return <EmployerCard onClick={toEmployer.bind(this,f.id)} key={index + '_job'} data={f} />
       })
     }
     {/* 公司列表数据 */}
     {/* 列表无数据 */}
     {
-      job && !job.length && <View className='job-empty'>
+      !loading && !job.length && <View className='job-empty'>
         <Image src={icon_view_state_empty} className='icon_view_state_empty' />
         <Text className='txt'>没有找到相关内容哦</Text>
       </View>

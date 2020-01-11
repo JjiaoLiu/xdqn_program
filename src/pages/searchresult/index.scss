@@ -11,9 +11,11 @@
     z-index: 999;
     .search-box{
       display: flex;
-      align-items: center;
-      padding: 35px;
-      .location {
+      align-items: stretch;
+      justify-content: space-between;
+      padding: 35px 0;
+      .action{
+        padding: 0 45px;
         display: inline-flex;
         align-items: center;
       }
@@ -35,6 +37,9 @@
       .cancel{
         font-size: 44px;
         color: #616161;
+        display: inline-flex;
+        align-items: center;
+        padding: 0 45px
       }
     }
     .tab-type{
@@ -71,7 +76,9 @@
         color: #9C9C9C;
         padding: 36px 0;
         flex: 1;
-        position: relative;
+        &.selected{
+          color:#82A2FE;
+        }
         .line {
           width: 1Px;
           height: 60px;
@@ -225,6 +232,7 @@
         }
      }
   }
+
   .icon_right_down_arrow{
     width: 12px;
     height: 12px;
@@ -232,5 +240,9 @@
   .icon_sort_select_arrow{
     width: 24px;
     height: 30px;
+  }
+  .icon_back{
+    width: 31px;
+    height: 53px;
   }
 }
