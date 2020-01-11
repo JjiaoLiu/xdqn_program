@@ -1,4 +1,4 @@
-import Taro, {useDidShow, useState} from '@tarojs/taro'
+import Taro, {useDidShow, useState,useReachBottom,useDidHide,usePullDownRefresh,useEffect,useCallback} from '@tarojs/taro'
 import {View, Swiper, SwiperItem, Text, Image} from '@tarojs/components'
 import request from "./../../util/request";
 import './index.scss'
@@ -28,7 +28,24 @@ export default function Index() {
   const [pageno, setPageno] = useState(1); //职位列表分页参数
   const [help] = useState(helpData); //求职指南数据
 
+  const [canload, setCanload] = useState(true);
+
   useDidShow(() => {
+    initPage()
+  });
+
+  useCallback(()=>{
+    request({
+      url: '/home/job/recommend',
+      data: {'pageNo': pageno},
+      auth: false
+    }).then((res) => {
+      res.pageSize > res.records.length ? setCanload(false) : '';
+      res.pageNo === 1 ? setRecommend(res.records) : setRecommend(Object.assign([], recommend, res.records));
+    });
+  },[pageno])
+
+  const initPage = ()=>{
     request({
       url: '/home/swiper',
       auth: false
@@ -51,17 +68,13 @@ export default function Index() {
     });
     request({
       url: '/home/job/recommend',
-      data: {'pageNo': pageno},
+      data: {'pageNo': pageno,pageSize:2},
       auth: false
     }).then((res) => {
-      if(res.pageno === 1) {
-        setRecommend(res.records);
-      } else {
-        setRecommend(Object.assign([], recommend, res.records));
-      }
-      setPageno(++res.pageNo);
+      res.pageSize > res.records.length ? setCanload(false) : '';
+      res.pageNo === 1 ? setRecommend(res.records) : setRecommend(Object.assign([], recommend, res.records));
     });
-  });
+  }
 
   const toWebView = (url) => {
     return Taro.navigateTo({url: `/pages/webViewPage/index?url=${url}`})
@@ -78,6 +91,18 @@ export default function Index() {
   const toJobid = (jobid) => {
     return Taro.navigateTo({url: `/pages/jobid/index?jobid=${jobid}`})
   };
+
+  useReachBottom(() => {
+    console.log('bottom')
+    let _pageno = pageno + 1;
+    canload && setPageno(_pageno)
+  });
+
+  usePullDownRefresh(() => {
+    !canload && setCanload(canload);
+    setPageno(1);
+    initPage();
+  });
 
   return (
     <View className='index'>

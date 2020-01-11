@@ -20,7 +20,8 @@ class App extends Component {
 
   config = {
     pages: [
-      'pages/layout/index',
+      'pages/index/index',
+      'pages/my/index',
       'pages/joblist/index',
       'pages/webViewPage/index',
       'pages/jobid/index',
@@ -29,6 +30,21 @@ class App extends Component {
       'pages/search/index',
       'pages/searchresult/index',
     ],
+    tabBar: {
+      list: [
+        {
+          pagePath: "pages/index/index",
+          text: "首页",
+          iconPath: "pages/icon_home_default.png",
+          selectedIconPath: "pages/icon_home_select.png"
+        },
+        {
+          pagePath: "pages/my/index",
+          text: "我的",
+          iconPath: "pages/icon_my_default.png",
+          selectedIconPath: "pages/icon_my_select.png"
+        }]
+    },
     window: {
       backgroundTextStyle: 'dark',
       navigationBarBackgroundColor: '#fff',

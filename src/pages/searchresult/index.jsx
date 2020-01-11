@@ -127,7 +127,7 @@ export default function Searchresult() {
       auth: false,
       data: tabtype === 'job' ? Object.assign({},params,{searchKey:searchkey}) : Object.assign({},{pageNo:params.pageNo},{searchKey:searchkey})
     }).then((res) => {
-      res.records.length < res.pageSize ? setCanload(false); : ''
+      res.records.length < res.pageSize ? setCanload(false) : ''
       res.pageNo === 1 ? setJob(res.records) : setJob(job.concat(res.records));
       setLoading(false);
       Taro.stopPullDownRefresh();
