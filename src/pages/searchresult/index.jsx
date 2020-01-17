@@ -1,21 +1,22 @@
 
 import Taro, {useState, useDidShow, usePullDownRefresh, useReachBottom,useEffect,useLayoutEffect} from "@tarojs/taro";
 import {View, Image, Text, Button, ScrollView,Input} from "@tarojs/components";
-import {AtMessage} from "taro-ui";
+import {AtMessage, AtCalendar} from "taro-ui";
 import ImageRoot from "../boots/imageRoot";
 import JobCard from "../boots/jobcard";
 import EmployerCard from "../boots/employercard";
-import icon_sort_select_arrow from './icon_sort_select_arrow.png';
-import icon_right_down_arrow from './icon_right_down_arrow.png';
-import icon_close from './icon_close.png';
-import icon_back from './icon_back.png';
-import icon_view_state_empty from './icon_view_state_empty.png';
+import icon_close from './../../asserts/icon_close.png';
+import icon_back from './../../asserts/icon_back.png';
+import icon_sort_select_arrow from './../../asserts/icon_sort_select_arrow.png';
+import icon_right_down_arrow from './../../asserts/icon_right_down_arrow.png';
+import icon_view_state_empty from './../../asserts/icon_view_state_empty.png';
+import icon_location from './../../asserts/icon_location.png'
+import icon_search from './../../asserts/icon_search.png'
 import request from './../../util/request';
 import {province as provinceJson} from './../../util/province';
-import './index.scss'
-import icon_location from './icon_location.png'
-import icon_search from './icon_search.png'
 import {formatDate} from './../../util/formatter';
+import './../../app.scss'
+import './index.scss'
 
 const tabheaderData = [
   {title: '类型', id: 1},
@@ -43,7 +44,7 @@ export default function Searchresult() {
   const [history,setHistory] = useState([]);
   const [hot,setHot] = useState([]);
 
-  const [searchkey,setSearchkey] = useState('');
+  const [searchkey,setSearchkey] = useState(this.$router.params.searchkey);
   const [tabtype ,setTabtype] = useState('job');
 
   const [winheight,setWinheight] = useState(500);
@@ -115,13 +116,13 @@ export default function Searchresult() {
   },[tabtype]);
 
   const getJob = () => {
-    // if(!searchkey){
-    //   setLoading(false);
-    //   return Taro.atMessage({
-    //     'message': '请输入关键字',
-    //     'type':'info'
-    //   })
-    // }
+    if(!searchkey){
+      setLoading(false);
+      return Taro.atMessage({
+        'message': '请输入关键字',
+        'type':'info'
+      })
+    }
     request({
       url: `/search/${tabtype}`,
       auth: false,
@@ -219,9 +220,11 @@ export default function Searchresult() {
     {/*fixed定位元素*/}
     <View className='fixed-top' id='fixed-top'>
       <View className='search-box'>
-        <View className='action'>
+        {/*<View className='action'>
           <View onClick={toPrev.bind(this)} className='action-btn'><Image src={icon_back} className='icon_back' /></View>
-        </View>
+        </View>*/}
+        <View className='space-30' />
+        <View className='space-15' />
         <View className='search-wrap'>
           <View className='search'>
             <Image src={icon_search} onClick={toPrev.bind(this)} className='icon_search' />
@@ -331,9 +334,11 @@ export default function Searchresult() {
                  <Button className={['btn ', filterparams.date ? 'btn-primary' : '']} onClick={handleParamsDefineDate.bind(this)}>指定</Button>
                  <Text>{filterparams.date}</Text>
               </View>
-              <View>
-
-              </View>
+               {
+                  filterparams.date && <View className='calendar'>
+                                          <AtCalendar onDayClick={(item) => handleFilterParams({date:item.value})} />
+                                       </View>
+               }
             </View>
           </View>
         </ScrollView>

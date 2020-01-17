@@ -1,11 +1,12 @@
 import Taro, {useState, useDidShow } from "@tarojs/taro";
 import {View, Image, Text} from "@tarojs/components";
-import icon_back from './icon_back.png';
-import icon_arrow_right from './icon_arrow_right.png';
-import icon_location  from './icon_location.png';
+import icon_back from './../../asserts/icon_back.png';
+import icon_arrow_right from './../../asserts/icon_arrow_right.png';
+import icon_location  from './../../asserts/icon_location.png';
 import request from './../../util/request';
 import ImageRoot from "../boots/imageRoot";
 import Jobcard from "../boots/jobcard";
+import PageTitle from "../boots/pagetitle/";
 import './../../app.scss';
 import './index.scss';
 
@@ -36,18 +37,9 @@ export default function Employer(){
 		})
 	}
 
-	const toPrev = ()=>{
-		return Taro.getCurrentPages().length > 0 ?  Taro.navigateBack({ delta: 1 }) :  Taro.reLaunch({ url: `/pages/layout/index?current=0` })
-	}
-
 	return (
 		<View className='employer'>
-			<View className='page-title'>
-				<Text className='center'>企业详情</Text>
-				<View className='action'>
-					<View className='action-btn' onClick={toPrev.bind(this)}><Image src={icon_back} className='icon_back' /></View>
-				</View>
-			</View>
+			<PageTitle title='企业详情' />
 			<View className='section'>
 				<View className='company'>
 					<View className='avatar'>

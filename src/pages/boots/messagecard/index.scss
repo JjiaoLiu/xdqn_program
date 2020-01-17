@@ -1,0 +1,29 @@
+.message-card {
+  padding:0  52px 16px 52px;
+  .time{
+    font-family: PingFangSC-Regular;
+    font-size: 38px;
+    color: #282828;
+    padding:42px 0 37px 0;
+    text-align: center;
+  }
+  .content{
+    padding: 53px 36px;
+    background: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    .title{
+      font-family: PingFangSC-Regular;
+      font-size: 44px;
+      color: #282828;
+      line-height: 65px;
+      padding-bottom: 14px;
+    }
+    .discribtion{
+      font-family: PingFangSC-Regular;
+      font-size: 38px;
+      color: #6D6D6D;
+      line-height: 65px;
+    }
+  }
+}

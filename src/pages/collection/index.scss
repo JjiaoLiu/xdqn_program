@@ -1,0 +1,26 @@
+.collection{
+	box-sizing: border-box;
+	padding-bottom: 168px;
+	padding-top: 168px;
+	background-color: #F2F2F2;
+	min-height: 100vh;
+	
+
+	.fixed-bottom{
+		left: 0;
+		right: 0;
+		bottom: 0;
+		position: fixed;
+		.action{
+			height: 168px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0 45px;
+			background-color: #FFFFFF;
+			.action-btn{
+				
+			}
+		}
+	}
+}

@@ -1,17 +1,18 @@
 import Taro, {useState, useDidShow, usePageScroll, useShareAppMessage } from "@tarojs/taro";
 import {View, Image, Text,Button} from "@tarojs/components";
-import icon_job_details_drop_down from './icon_job_details_drop_down.png';
-import icon_arrow_right from './icon_arrow_right.png';
-import icon_back_white from './icon_back_white.png';
-import icon_collection from './icon_collection.png';
-import icon_collection_checked from './icon_collection_checked.png';
-import icon_location from './icon_location.png';
-import icon_consult from './icon_consult.png';
-import icon_goback_home from './icon_goback_home.png';
-import icon_share from './icon_share.png';
-import icon_report from './icon_report.png';
+import icon_job_details_drop_down from './../../asserts/icon_job_details_drop_down.png';
+import icon_arrow_right from './../../asserts/icon_arrow_right.png';
+import icon_back_white from './../../asserts/icon_back_white.png';
+import icon_collection from './../../asserts/icon_collection.png';
+import icon_collection_checked from './../../asserts/icon_collection_checked.png';
+import icon_location from './../../asserts/icon_location.png';
+import icon_consult from './../../asserts/icon_consult.png';
+import icon_goback_home from './../../asserts/icon_goback_home.png';
+import icon_share from './../../asserts/icon_share.png';
+import icon_report from './../../asserts/icon_report.png';
 import request from './../../util/request';
 import ImageRoot from "../boots/imageRoot";
+import PageTitle from "../boots/pagetitle/";
 import './../../app.scss';
 import './index.scss';
 
@@ -67,20 +68,16 @@ export default function Jobid(){
 
 	const openLocation = (latitude,longitude)=>{
 		Taro.chooseLocation({
-			latitude,longitude,scale: 18
-		})
+			latitude,longitude,scale: 18,
+		}).catch(err=>{console.log(err)})
 	}
 
 	const toIndex = ()=>{
-		return Taro.redirectTo({url:`/pages/layout/index?current=0`})
+		return Taro.switchTab({url:`/pages/index/index`})
 	}
 
 	const toEmployer = (employerId)=>{
 		return Taro.redirectTo({url:`/pages/employer/index?employerId=${employerId}`})
-	}
-
-	const toPrev = ()=>{
-		return Taro.getCurrentPages().length > 0 ?  Taro.navigateBack({ delta: 1 }) :  Taro.reLaunch({ url: `/pages/layout/index?current=0` })
 	}
 
 	usePageScroll(res => {
@@ -92,22 +89,24 @@ export default function Jobid(){
 		let params = {
 		    	title: job.title,
 		    	path: `/page/jobid?jobid=${job.jobid}`
-		    }; 
+		    };
 	  return params
 	})
 	return (
 		<View className='job-id'>
-			<View className={['page-title transparent ',pagetitleactive ? 'active' : '']} id='page-title'>
-				<Text className='center'>兼职详情</Text>
-				<View className='action'>
-					<View onClick={toPrev.bind(this)} className='action-btn'><Image src={icon_back_white} className='icon_back_white' /></View>
-					<View onClick={setActiondrop.bind(this,!actiondrop)} className='action-btn'><Image src={icon_job_details_drop_down} className='icon_job_details_drop_down' /></View>
-				</View>
-				<View className={['action-drop',actiondrop ? 'active' : '']}>
-					<Button className='item' openType='share'><Image src={icon_share} className='icon_share'/>分享</Button>
-					<View className='item'><Image src={icon_report} className='icon_report' />投诉</View>
-					<View className='item' onClick={toIndex.bind(this)}><Image src={icon_goback_home} className='icon_goback_home'/>回首页</View>
-				</View>
+			<View id='page-title'>
+				<PageTitle title='兼职详情' pagetitleactive={pagetitleactive} transparent={true}>
+						<View className='fixed-top-action'>
+							<View onClick={setActiondrop.bind(this,!actiondrop)} className='action-btn'>
+								<Image src={icon_job_details_drop_down} className='icon_job_details_drop_down' />
+							</View>
+							<View className={['action-drop',actiondrop ? 'active' : '']}>
+								<Button className='item' openType='share'><Image src={icon_share} className='icon_share'/>分享</Button>
+								<View className='item'><Image src={icon_report} className='icon_report' />投诉</View>
+								<View className='item' onClick={toIndex.bind(this)}><Image src={icon_goback_home} className='icon_goback_home'/>回首页</View>
+							</View>
+						</View>
+				</PageTitle>
 			</View>
 			<View className='huge' id='huge'>
 				<View className='p1'>{job.title}</View>

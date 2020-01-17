@@ -105,6 +105,54 @@
 					"pathName": "pages/searchresult/index",
 					"query": "searchKey=",
 					"scene": null
+				},
+				{
+					"id": 8,
+					"name": "my",
+					"pathName": "pages/my/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "about",
+					"pathName": "pages/about/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "message",
+					"pathName": "pages/message/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "Collection",
+					"pathName": "pages/collection/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "wallet",
+					"pathName": "pages/wallet/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "Withdraw",
+					"pathName": "pages/withdraw/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "resume",
+					"pathName": "pages/resume/index",
+					"scene": null
 				}
 			]
 		}

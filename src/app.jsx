@@ -29,83 +29,63 @@ class App extends Component {
       'pages/auth/index',
       'pages/search/index',
       'pages/searchresult/index',
+      'pages/about/index',
+      'pages/message/index',
+      'pages/collection/index',
+      'pages/wallet/index',
+      'pages/withdraw/index',
+      'pages/resume/index',
     ],
     tabBar: {
       list: [
         {
           pagePath: "pages/index/index",
           text: "首页",
-          iconPath: "pages/icon_home_default.png",
-          selectedIconPath: "pages/icon_home_select.png"
+          iconPath: "asserts/icon_home_default.png",
+          selectedIconPath: "asserts/icon_home_select.png"
         },
         {
           pagePath: "pages/my/index",
           text: "我的",
-          iconPath: "pages/icon_my_default.png",
-          selectedIconPath: "pages/icon_my_select.png"
+          iconPath: "asserts/icon_my_default.png",
+          selectedIconPath: "asserts/icon_my_select.png"
         }]
     },
     window: {
-      backgroundTextStyle: 'dark',
-      navigationBarBackgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#000000',
       navigationBarTitleText: '小豆青年',
-      navigationBarTextStyle: 'black',
+      navigationBarTextStyle: 'white',
       enablePullDownRefresh: true,
       backgroundColor:'#f4f4f4'
     },
-    plugins: {
-      calendar: {
-        version: '1.1.3',
-        provider: 'wx92c68dae5a8bb046'
-      },
-    }
   }
 
   componentDidMount() {
   }
 
   componentDidShow() {
-      // Taro.getSetting({
-      //   success: res=> {
-      //     if (res.authSetting && res.authSetting['scope.userInfo']) {
-      //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-      //       Taro.getUserInfo({
-      //         success: function (data) {
-      //           console.log(data.userInfo);
-      //           // {
-      //           //   avatarUrl: '微信头像img文件path'
-      //           //   nickname: '微信昵称'
-      //           // }
-      //         }
-      //       });
-      //     } else {
-            
-      //     }
-      //   }
-      // });
+    Taro.getSetting({
+      success: res=> {
+        if (res.authSetting && res.authSetting['scope.userInfo']) {
+          Taro.getUserInfo({
+            success: function (data) {
+              console.log(data.userInfo);
+              // {
+              //   avatarUrl: '微信头像img文件path'
+              //   nickname: '微信昵称'
+              // }
+            }
+          });
+        } else {
+          
+        }
+      }
+    });
 
 
-      // Taro.checkSession({
-      //   success (res) {
-      //     console.log(res);
-      //   },
-      //   fail (res) {
-      //     Taro.login().then(res=>{
-      //       request({
-      //         url:'/social/login',
-      //         data:{
-      //           code:res.code
-      //         }      
-      //       }).then(res=>{
-      //         console.log(res);
-      //       })
-      //     })
-      //   }
-      // })
-
-    // Taro.checkSession().then(() => {
-    
-    // }).catch(() => {
+    // Taro.checkSession()
+    // .catch(() => {
     //     return Taro.login()
     //       .then(res => {
     //         console.log(res);
@@ -114,14 +94,13 @@ class App extends Component {
     //           url: REQUEST_URL + '/social/login',
     //           data: {code: res.code},
     //           success: function (r) {
-    //             if (r.statusCode == 200 && r.data.ret == 200) {
+    //             if (r.statusCode == 200) {
     //               Taro.setStorage({
-    //                 key: "session3rd",
-    //                 data: r.statusCode.code
+                    
     //               });
     //             } else if (r.statusCode == 500) {
     //               Taro.showToast({
-    //                 title: "发生错误,请重试！",
+    //                 title: "发生错误,请重试",
     //                 icon: "none"
     //               });
     //             }

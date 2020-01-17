@@ -1,12 +1,13 @@
 import Taro, {useState, useDidShow, usePullDownRefresh, useReachBottom} from "@tarojs/taro";
 import {View, Image, Text, Button, ScrollView} from "@tarojs/components";
+import { AtCalendar } from "taro-ui"
 import ImageRoot from "../boots/imageRoot";
 import JobCard from "../boots/jobcard";
-import icon_down_select_checked from './icon_down_select_checked.png';
-import icon_down_select_default from './icon_down_select_default.png';
-import icon_right_down_arrow from './icon_right_down_arrow.png';
-import icon_close from './icon_close.png';
-import icon_view_state_empty from './icon_view_state_empty.png';
+import icon_down_select_checked from './../../asserts/icon_down_select_checked.png';
+import icon_down_select_default from './../../asserts/icon_down_select_default.png';
+import icon_right_down_arrow from './../../asserts/icon_right_down_arrow.png';
+import icon_close from './../../asserts/icon_close.png';
+import icon_view_state_empty from './../../asserts/icon_view_state_empty.png';
 import request from './../../util/request';
 import {province as provinceJson} from './../../util/province';
 import {formatDate} from './../../util/formatter';
@@ -125,6 +126,7 @@ export default function Joblist() {
   };
 
   const handleFilterParams = (v) => {
+    console.log(v)
     let _params = Object.assign({}, filterparams, v);
     setFilterparams(_params);
   };
@@ -172,6 +174,10 @@ export default function Joblist() {
    const toJobid = (jobid) => {
     return Taro.navigateTo({url: `/pages/jobid/index?jobid=${jobid}`})
   };
+
+  const dayClickHandler = (e) =>{
+    console.log(e.detail)
+  }
 
   return (
     <View className={['joblist ',tabselected.id && mask ? 'with-mask' : '']} style={{'min-height':winheight+'px'}}>
@@ -332,9 +338,11 @@ export default function Joblist() {
                    <Button className={['btn ', filterparams.date ? 'btn-primary' : '']} onClick={handleParamsDefineDate.bind(this)}>指定</Button>
                    <Text>{filterparams.date}</Text>
                 </View>
-                <View>
-
-                </View>
+                {
+                  filterparams.date && <View className='calendar'>
+                                          <AtCalendar onDayClick={(item) => handleFilterParams({date:item.value})} />
+                                       </View>
+                }
               </View>
             </View>
           </ScrollView>

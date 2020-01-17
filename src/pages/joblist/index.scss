@@ -3,6 +3,11 @@
   padding-top: 128px;
   box-sizing:border-box;
  
+  .calendar{
+    padding: 40px 0;
+    background-color: #F7F8FC;
+  }
+
   &.with-mask{
     overflow: hidden;
     position: absolute;

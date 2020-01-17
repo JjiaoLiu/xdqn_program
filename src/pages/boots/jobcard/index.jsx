@@ -1,7 +1,7 @@
 import Taro, {Text, View} from "@tarojs/components";
 import ImageRoot from "./../imageRoot";
-import './index.scss';
 import './../../../app.scss';
+import './index.scss';
 
 export default function JobCard(props) {
 
@@ -11,7 +11,7 @@ export default function JobCard(props) {
     <View className='job-card' onClick={this.props.onClick}>
       <View className='media'>
         <View className='typeImgUrl'>
-          <ImageRoot imageUrl={job.typeImgUrl} />
+          {job.typeImgUrl && <ImageRoot imageUrl={job.typeImgUrl} />}
         </View>
         <View>
           <View className='title'><Text>{job.title}</Text></View>

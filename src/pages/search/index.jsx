@@ -1,9 +1,10 @@
 import Taro,{useState,useDidShow} from '@tarojs/taro'
 import {Image,Input,View,Button,Text} from '@tarojs/components'
-import './index.scss'
-import icon_location from './icon_location.png'
-import icon_search from './icon_search.png'
+import icon_location from './../../asserts/icon_location.png'
+import icon_search from './../../asserts/icon_search.png'
 import request from './../../util/request'
+import './../../app.scss'
+import './index.scss'
 
 export default function Search(props) {
 
@@ -16,8 +17,8 @@ export default function Search(props) {
     return Taro.getCurrentPages().length > 1 ?  Taro.navigateBack({ delta: 1 }) :  Taro.redirectTo({ url: `/pages/layout/index?current=0` })
   }
 
-  const toSearchresult  = ()=>{
-    return Taro.navigateTo({url:`/pages/searchresult/index?searchKey=${searchkey}`});
+  const toSearchresult  = (keyword)=>{
+    return Taro.navigateTo({url:`/pages/searchresult/index?searchKey=${keyword}`});
   }
 
   const handleChange = (e)=>{
@@ -28,9 +29,7 @@ export default function Search(props) {
     request({
       url:'/search/hot-keyword',
       auth:false
-    }).then(res=>{
-      setHot(res)
-    });
+    }).then(res => setHot(res));
   })
 
   return (
@@ -45,7 +44,7 @@ export default function Search(props) {
         <View className='space-40' />
         <View className='search-wrap'>
           <View className='search'>
-            <Image src={icon_search} onClick={toSearchresult.bind(this)} className='icon_search' />
+            <Image src={icon_search} onClick={toSearchresult.bind(this,searchkey)} className='icon_search' />
             <View className='space-15' />
             <Input placeholder='请输入职位或公司' value={searchkey} onChange={(e)=> handleChange(e)} placeholder='' focus/>
           </View>
@@ -69,7 +68,7 @@ export default function Search(props) {
       <View className='item'>
         {
           hot.map((f,index)=>{
-            return <Button className='btn' key={index+'_hot'}>{f.keyword}</Button>
+            return <Button className='btn' key={index+'_hot'} onClick={toSearchresult.bind(this,f.keyword)}>{f.keyword}</Button>
           })
         }
       </View>

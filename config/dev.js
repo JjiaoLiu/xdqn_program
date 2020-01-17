@@ -5,7 +5,7 @@ module.exports = {
   },
   defineConstants: {
     REQUEST_URL: 'https://app.jxd007.cn',
-    IMAGE_URL: 'https://app.jxd007.cn/',
+    IMAGE_URL: 'http://app.jxd007.cn/',
   },
   weapp: {},
   h5: {}

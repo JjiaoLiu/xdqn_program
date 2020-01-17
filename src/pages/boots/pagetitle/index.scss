@@ -1,0 +1,24 @@
+.page-title{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 168px;
+  font-family: PingFangSC-Medium;
+  font-size: 48px;
+  line-height: 168px;
+  text-align: center;
+  z-index: 1;
+  transition: background .3s;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #cdcdcd;
+  color:  #282828;
+  &.transparent{
+    background-color: transparent;
+    color: #FFFFFF;
+    border-bottom: 1px solid transparent;
+  }
+  &.active{
+    background: #82A2FE;
+  };
+}

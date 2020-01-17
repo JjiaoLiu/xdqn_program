@@ -1,24 +1,24 @@
 import Taro, {useDidShow, useState,useReachBottom,useDidHide,usePullDownRefresh,useEffect,useCallback} from '@tarojs/taro'
 import {View, Swiper, SwiperItem, Text, Image} from '@tarojs/components'
 import request from "./../../util/request";
-import './index.scss'
 import ImageRoot from "../boots/imageRoot";
 import JobCard from "../boots/jobcard";
-import icon_arrow_right_small from './icon_arrow_right_small.png';
-import icon_location from './icon_location.png';
-import icon_search from './icon_search.png';
+import icon_arrow_right_small from './../../asserts/icon_arrow_right_small.png';
+import icon_location from './../../asserts/icon_location.png';
+import icon_search from './../../asserts/icon_search.png';
 import './../../app.scss'
+import './index.scss'
 
 const helpData = [{
   label: "求职指南",
   linkUrl: "https://app.jxd007.cn/static/pages/JobSearchGuide.html",
   // eslint-disable-next-line import/no-commonjs
-  imgUrl: require("./icon_home_search_job_item.png")
+  imgUrl: require("./../../asserts/icon_home_search_job_item.png")
 }, {
   label: "帮助中心",
   linkUrl: "https://app.jxd007.cn/static/pages/HelpCenter/index.html",
   // eslint-disable-next-line import/no-commonjs
-  imgUrl: require("./icon_home_job_help_item.png")
+  imgUrl: require("./../../asserts/icon_home_job_help_item.png")
 }];
 
 export default function Index() {
@@ -93,9 +93,10 @@ export default function Index() {
   };
 
   useReachBottom(() => {
-    console.log('bottom')
-    let _pageno = pageno + 1;
-    canload && setPageno(_pageno)
+    if(canload){
+      let _pageno = pageno + 1;
+      setPageno(pageno)
+    }
   });
 
   usePullDownRefresh(() => {
@@ -142,11 +143,11 @@ export default function Index() {
       <View className='nav'>
         {
           jobType.map((f, index) => {
-            return <View className='item' key={index + '_jobType'}>
+            return <View className='item' key={index + '_jobType'} onClick={toJoblist.bind(this,f.id)}>
               <View className='icon'>
                 <ImageRoot imageUrl={f.imgUrl} />
               </View>
-              <Text className='label'>{f.jobTypeName}</Text>
+              <Text className='label'>{f.jobTypeName}{f.jobTypeId}</Text>
             </View>
           })
         }

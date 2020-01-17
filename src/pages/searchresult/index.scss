@@ -2,6 +2,10 @@
   padding-top:415px; 
   box-sizing:border-box;
   background-color: #F4F4F4;
+  .calendar{
+    padding: 40px 0;
+    background-color: #F7F8FC;
+  }
  .fixed-top {
     position: fixed;
     top: 0;
@@ -232,17 +236,26 @@
         }
      }
   }
+}
+.icon_location{
+  width: 37px;
+  height: 45px;
+}
 
-  .icon_right_down_arrow{
-    width: 12px;
-    height: 12px;
-  }
-  .icon_sort_select_arrow{
-    width: 24px;
-    height: 30px;
-  }
-  .icon_back{
-    width: 31px;
-    height: 53px;
-  }
+.icon_search{
+  width: 48px;
+  height: 48px;
+}
+
+.icon_right_down_arrow{
+  width: 12px;
+  height: 12px;
+}
+.icon_sort_select_arrow{
+  width: 24px;
+  height: 30px;
+}
+.icon_back{
+  width: 31px;
+  height: 53px;
 }
